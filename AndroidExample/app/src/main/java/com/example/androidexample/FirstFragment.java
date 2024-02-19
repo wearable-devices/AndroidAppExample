@@ -21,7 +21,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import mudraAndroidSDK.enums.AirTouchCommands;
+import mudraAndroidSDK.enums.ModelType;
 import mudraAndroidSDK.interfaces.MudraDelegate;
+import mudraAndroidSDK.interfaces.callback.OnAirTouchClickRelease;
+import mudraAndroidSDK.interfaces.callback.OnTensorFlowDataReady;
 import mudraAndroidSDK.model.Mudra;
 import mudraAndroidSDK.model.MudraDevice;
 
@@ -30,11 +34,9 @@ public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
 
     private final ArrayList<MudraDevice> pairedDevices = new ArrayList<>();
-    private final ArrayList<MudraDevice> scannedDevices = new ArrayList<>();
     private final ArrayList<MudraDevice> connectedDevices = new ArrayList<>();
 
     private UnconnectedDeviceAdapter pairedDeviceAdapter;
-    private UnconnectedDeviceAdapter scannedDeviceAdapter;
     private ConnectedDeviceAdapter connectedDeviceAdapter;
 
     @Override
@@ -52,35 +54,12 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void setButtons() {
-        binding.scanSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isOn) {
-                if( isOn ) {
-                    Mudra.getInstance().scan(getContext());
-                } else {
-                    scannedDevices.clear();
-                    Mudra.getInstance().stopScan();
-                    updateScannedDevicesRecycler();
-                }
-            }
-        });
-    }
-
     private void setAdapters() {
         binding.PairedDevicesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.PairedDevicesRecycler.setHasFixedSize(true);
-        binding.ScannedDevicesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.ScannedDevicesRecycler.setHasFixedSize(true);
         binding.ConnectedDevicesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.ConnectedDevicesRecycler.setHasFixedSize(true);
         pairedDeviceAdapter = new UnconnectedDeviceAdapter(pairedDevices, getContext()) {
-            @Override
-            public void connectDevice(MudraDevice device) {
-                device.connectDevice(getContext());
-            }
-        };
-        scannedDeviceAdapter = new UnconnectedDeviceAdapter(scannedDevices, getContext()) {
             @Override
             public void connectDevice(MudraDevice device) {
                 device.connectDevice(getContext());
@@ -95,11 +74,15 @@ public class FirstFragment extends Fragment {
 
             @SuppressLint("SetTextI18n")
             @Override
-            public void switchPressure(MudraDevice device, TextView textView, Boolean isOn) {
+            public void switchPressure(MudraDevice device, ConnectedDeviceViewHolder viewHolder, Boolean isOn) {
                 if( isOn ) {
+                    if( viewHolder.switch_air_mouse.isEnabled() ){
+                        viewHolder.switch_air_mouse.setChecked(false);
+                    }
                     device.setOnPressureReady( v -> {
                         ((Activity)(getContext())).runOnUiThread(()-> {
-                            textView.setText(Float.toString(v));
+                            viewHolder.pressure_value.setText(String.format("%.1f", v));
+                            viewHolder.progress_bar.setProgress((int)(v*100));
                         });
                     });
                 } else {
@@ -107,6 +90,16 @@ public class FirstFragment extends Fragment {
                 }
             }
 
+            @Override
+            public void switchAirMouse(MudraDevice device, ConnectedDeviceViewHolder viewHolder, Boolean isOn) {
+                if ( isOn ) {
+                    device.setFirmwareOnAndroidMode();
+                    if( viewHolder.switch_pressure.isEnabled()){
+                        viewHolder.switch_pressure.setChecked(false);
+                    }
+                }
+                device.setAirMouseActive(isOn);
+            }
         };
     }
 
@@ -114,10 +107,6 @@ public class FirstFragment extends Fragment {
         pairedDevices.clear();
         pairedDevices.addAll(Mudra.getInstance().getBondedDevices(getContext()));
         binding.PairedDevicesRecycler.setAdapter(pairedDeviceAdapter);
-    }
-
-    private void updateScannedDevicesRecycler(){
-        binding.ScannedDevicesRecycler.setAdapter(scannedDeviceAdapter);
     }
 
     private void updateConnectedDevicesRecycler(){
@@ -136,24 +125,24 @@ public class FirstFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setAdapters();
-        setButtons();
         updatePairedDevicesRecycler();
-        updateScannedDevicesRecycler();
         updateConnectedDevicesRecycler();
         setMudraDelegate();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        for(MudraDevice device : connectedDevices){
+            device.setOnPressureReady(null);
+        }
     }
 
     private void setMudraDelegate() {
         Mudra.getInstance().setMudraDelegate(new MudraDelegate() {
             @Override
             public void onDeviceDiscovered(MudraDevice mudraDevice) {
-                ((Activity)(getContext())).runOnUiThread(()-> {
-                    if (!scannedDevices.contains(mudraDevice)) {
-                        scannedDevices.add(mudraDevice);
-                        updateScannedDevicesRecycler();
-                    }
-                });
+
             }
 
             @Override
@@ -161,11 +150,9 @@ public class FirstFragment extends Fragment {
                 ((Activity)(getContext())).runOnUiThread(()-> {
                     if( !connectedDevices.contains(mudraDevice) ){
                         connectedDevices.add(mudraDevice);
-                        scannedDevices.remove(mudraDevice);
                     }
                     updateConnectedDevicesRecycler();
                     updatePairedDevicesRecycler();
-                    updateScannedDevicesRecycler();
                 });
             }
 

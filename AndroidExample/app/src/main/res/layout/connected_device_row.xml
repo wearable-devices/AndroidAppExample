@@ -3,13 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="210dp">
+
+    <View
+        android:id="@+id/pressure_view"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/rounded_corner_background_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_view" />
+
+    <View
+        android:id="@+id/info_view"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="100dp"
+        android:background="@drawable/rounded_corner_background_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connected_device_disconnect_device_button" />
 
     <TextView
         android:id="@+id/connected_device_device_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="TextView"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/connected_device_disconnect_device_button"
@@ -20,7 +43,6 @@
         android:id="@+id/connected_device_disconnect_device_button"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginEnd="50dp"
         android:text="Disconnect"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,39 +52,80 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0.0"
-        app:layout_constraintBottom_toBottomOf="@+id/connected_device_switch_pressure"
-        app:layout_constraintEnd_toEndOf="@+id/connected_device_disconnect_device_button"
-        app:layout_constraintStart_toStartOf="@+id/connected_device_disconnect_device_button"
+        app:layout_constraintEnd_toEndOf="@+id/connected_device_pressure_progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/connected_device_pressure_progress_bar"
         app:layout_constraintTop_toTopOf="@+id/connected_device_switch_pressure" />
 
     <Switch
         android:id="@+id/connected_device_switch_pressure"
         android:layout_width="130dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:text="Pressure"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/connected_device_device_name"
-        app:layout_constraintTop_toBottomOf="@+id/connected_device_device_name" />
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/pressure_view"
+        app:layout_constraintTop_toTopOf="@+id/pressure_view" />
+
+    <Switch
+        android:id="@+id/connected_device_switch_airmouse"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:text="Air-Mouse"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/connected_device_switch_pressure"
+        app:layout_constraintTop_toBottomOf="@+id/connected_device_switch_pressure" />
 
     <TextView
         android:id="@+id/connected_device_battery_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:text="Battery : "
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@+id/connected_device_switch_pressure"
-        app:layout_constraintTop_toBottomOf="@+id/connected_device_switch_pressure" />
+        app:layout_constraintStart_toStartOf="@+id/info_view"
+        app:layout_constraintTop_toBottomOf="@+id/connected_device_disconnect_device_button" />
+
+    <TextView
+        android:id="@+id/connected_device_firmware_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Firmware : "
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/connected_device_battery_title"
+        app:layout_constraintTop_toBottomOf="@+id/connected_device_battery_title" />
 
     <TextView
         android:id="@+id/connected_device_battery_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0%"
-        app:layout_constraintEnd_toEndOf="@+id/connected_device_disconnect_device_button"
-        app:layout_constraintStart_toStartOf="@+id/connected_device_disconnect_device_button"
+        app:layout_constraintStart_toStartOf="@+id/connected_device_firmware_value"
         app:layout_constraintTop_toTopOf="@+id/connected_device_battery_title" />
+
+    <TextView
+        android:id="@+id/connected_device_firmware_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="0.0.0.0"
+        app:layout_constraintEnd_toEndOf="@+id/info_view"
+        app:layout_constraintTop_toTopOf="@+id/connected_device_firmware_title" />
+
+    <ProgressBar
+        android:id="@+id/connected_device_pressure_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-20dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/pressure_view"
+        app:layout_constraintStart_toStartOf="@+id/connected_device_disconnect_device_button"
+        app:layout_constraintTop_toBottomOf="@+id/connected_device_pressure_value" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

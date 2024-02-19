@@ -6,6 +6,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -19,10 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import mudraAndroidSDK.enums.Feature;
+import mudraAndroidSDK.enums.LoggingSeverity;
+import mudraAndroidSDK.interfaces.callback.OnGetEmailLicensesCallback;
 import mudraAndroidSDK.model.Mudra;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
 
     @Override
@@ -37,7 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private void initializeMudra()
     {
         Mudra.getInstance().requestAccessPermissions(this);
-        Mudra.getInstance().setLicense(Feature.RawData, "LicenseType::Main");
+        Mudra.getInstance().getLicenseForEmailFromCloud("-------@--------", (success, errorResult) -> {
+            if( success ) {
+                Log.d(TAG , "licenses set successfully.");
+            } else {
+                Log.d(TAG , "failed to set licenses : " + errorResult +".");
+            }
+        });
+        Mudra.getInstance().setCoreLoggingSeverity(LoggingSeverity.Error);
     }
 
     @Override
@@ -46,4 +57,5 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 }
