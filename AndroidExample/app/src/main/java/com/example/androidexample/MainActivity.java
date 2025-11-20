@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeMudra()
     {
         Mudra.getInstance().requestAccessPermissions(this);
-        Mudra.getInstance().getLicenseForEmailFromCloud("-------@--------", (success, errorResult) -> {
+        Mudra.getInstance().getLicenseForEmailFromCloud("------@--------", (success, errorResult) -> {
             if( success ) {
                 Log.d(TAG , "licenses set successfully.");
             } else {
