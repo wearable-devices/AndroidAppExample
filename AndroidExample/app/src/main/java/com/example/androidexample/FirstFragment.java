@@ -96,7 +96,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF SNC
                 disableSNC();
             }
-            updateIndicator(connectedDeviceBinding.sncIndicator, isChecked);
         });
 
         // Accelerometer Switch
@@ -108,7 +107,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Accelerometer
                 disableAccelerometer();
             }
-            updateIndicator(connectedDeviceBinding.accIndicator, isChecked);
         });
 
         // Gyroscope Switch
@@ -120,7 +118,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Gyroscope
                 disableGyroscope();
             }
-            updateIndicator(connectedDeviceBinding.gyroIndicator, isChecked);
         });
 
         // Quaternium Switch
@@ -132,7 +129,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Quaternium
                 disableQuaternium();
             }
-            updateIndicator(connectedDeviceBinding.quaterniumIndicator, isChecked);
         });
 
         // Pressure Switch
@@ -144,7 +140,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Pressure
                 disablePressure();
             }
-            updateIndicator(connectedDeviceBinding.pressureIndicator, isChecked);
         });
 
         // Gesture Switch
@@ -156,7 +151,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Gesture
                 disableGesture();
             }
-            updateIndicator(connectedDeviceBinding.gestureIndicator, isChecked);
         });
 
         // Gesture HID Switch
@@ -168,7 +162,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Gesture HID
                 disableGestureHID();
             }
-            updateIndicator(connectedDeviceBinding.gestureHidIndicator, isChecked);
         });
 
         // Navigation Switch
@@ -180,7 +173,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Navigation
                 disableNavigation();
             }
-            updateIndicator(connectedDeviceBinding.navigationIndicator, isChecked);
         });
 
         // Navigation App Switch
@@ -192,7 +184,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Navigation App
                 disableNavigationApp();
             }
-            updateIndicator(connectedDeviceBinding.navigationAppIndicator, isChecked);
         });
 
         // Navigation HID Switch
@@ -204,7 +195,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Navigation HID
                 disableNavigationHID();
             }
-            updateIndicator(connectedDeviceBinding.navigationHidIndicator, isChecked);
         });
 
         // Air Touch Switch
@@ -216,7 +206,6 @@ public class FirstFragment extends Fragment {
                 // Turn OFF Air Touch
                 disableAirTouch();
             }
-            updateIndicator(connectedDeviceBinding.airtouchIndicator, isChecked);
         });
 
         connectedDeviceBinding.handLeftContainer.setOnClickListener(v -> {
